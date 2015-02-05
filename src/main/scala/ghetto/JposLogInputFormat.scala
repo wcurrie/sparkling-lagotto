@@ -5,8 +5,6 @@ import io.github.binaryfoo.lagotto.reader.EntryIterator
 import org.apache.hadoop.fs.{FSDataInputStream, Path}
 import org.apache.hadoop.mapred._
 
-import scala.io.Source
-
 class JposLogInputFormat extends InputFormat[FilePosition, JposEntryHolder] {
 
   override def getSplits(job: JobConf, numSplits: Int): Array[InputSplit] = {
@@ -29,7 +27,7 @@ class JposLogInputFormat extends InputFormat[FilePosition, JposEntryHolder] {
 
 class JposRecordReader(val stream: FSDataInputStream, val len: Long, val path: Path) extends RecordReader[FilePosition, JposEntryHolder] {
 
-  private val iterator = new EntryIterator[JposEntry](Source.fromInputStream(stream), path.toString)
+  private val iterator = new EntryIterator[JposEntry](stream, path.toString)
 
   override def next(key: FilePosition, value: JposEntryHolder): Boolean = {
     if (!iterator.hasNext) {
